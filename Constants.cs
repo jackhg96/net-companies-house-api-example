@@ -4,7 +4,7 @@ namespace CsvReadWithApiCheck;
 
 public static class Constants
 {
-    public static readonly ImmutableHashSet<string> CupsSicCodes = ImmutableHashSet.Create(
+    public static readonly ImmutableHashSet<string> LookupSicCodes = ImmutableHashSet.Create(
         "47810",
         "93210",
         "47990",

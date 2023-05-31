@@ -22,12 +22,14 @@ public class CompaniesHouseClient
         };
     }
 
-    public GetCompanyResponse? GetCompany(string? companyNumber) 
+    public GetCompanyResponse? GetCompany(string companyNumber) 
     {
         var authString = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{apiKey}:"));
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authString);
-        
-        var res = httpClient.GetAsync($"company/{companyNumber}").Result;
+
+        var paddedString = companyNumber.PadLeft(8, '0');
+
+        var res = httpClient.GetAsync($"company/{paddedString}").Result;
         var json = res.Content.ReadAsStringAsync().Result;
 
         return JsonSerializer.Deserialize<GetCompanyResponse>(json);

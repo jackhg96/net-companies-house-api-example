@@ -4,9 +4,9 @@ namespace CsvReadWithApiCheck.Models;
 
 public class CsvRow
 {
-    [Name("company_number")] 
-    public string? ComanyNumber { get; set; }
+    [Name("Company")] 
+    public string? CompanyNumber { get; set; }
 
-    [Name("company_name")]
+    [Name("Producer Organisation")]
     public string? CompanyName { get; set; }
 }
