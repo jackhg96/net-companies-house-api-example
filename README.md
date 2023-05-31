@@ -1,9 +1,9 @@
-# CSV reader example project
-This project creates an easy reference point for working with CSV files in .NET.\
-This project also integrates with Comapnies House API to give an example of working with the CSV data.
+# Companies House .NET API Sample
+This project creates an easy reference point for integrating with the Companies House API using .NET.\
+This project also showcases how to easily parse a CSV file for input data.
 
 ## Run
-To tun the project you will need to obtain a companies house api key and then add it as a user secret;
+To run the project you will need to obtain a companies house api key and then add it as a user secret
 ```
 dotnet user-secrets set "CompaniesHouseApiKey" "your-key-here"
 ```
