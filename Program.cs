@@ -9,7 +9,7 @@ Console.WriteLine("Starting ...");
 IEnumerable<CsvRow> csvList;
 IConfigurationRoot configurationRoot;
 HashSet<string> matchingCompanies = new();
-string csvPath = "test-path"
+string csvPath = "test-path";
 
 InitConfiguration();
 LoadCsvData();
