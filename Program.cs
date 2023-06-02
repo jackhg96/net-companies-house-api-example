@@ -17,8 +17,10 @@ LoadCsvData();
 
 await CheckCompanies();
 
+Console.WriteLine($"{Environment.NewLine}-----------------------------------------------------------{Environment.NewLine}");
 Console.WriteLine($"{matchingCompanies.Count} producers match a lookup SIC code."); 
 Console.WriteLine($"Of those producers {companiesUsingScheme.Count} are using a compliance scheme."); 
+
 
 Console.WriteLine($"Press any key to exit.");
 
@@ -77,6 +79,10 @@ async Task CheckCompanies()
             {
                 Console.WriteLine($"{company.Name} is NOT a matching producer.");
             }
+        }
+        else
+        {
+            Console.WriteLine($"WARN: SIC codes not found for {company.Name}.");
         }
 
         Thread.Sleep(500);
