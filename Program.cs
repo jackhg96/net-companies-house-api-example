@@ -10,13 +10,15 @@ IEnumerable<CsvRow> csvList;
 IConfigurationRoot configurationRoot;
 HashSet<string> matchingCompanies = new();
 string csvPath = "test-path";
+HashSet<string> companiesUsingScheme = new();
 
 InitConfiguration();
 LoadCsvData();
 
-CheckCompanies();
+await CheckCompanies();
 
-Console.WriteLine($"{matchingCompanies.Count} producers match a lookup SIC code."); //replace
+Console.WriteLine($"{matchingCompanies.Count} producers match a lookup SIC code."); 
+Console.WriteLine($"Of those producers {companiesUsingScheme.Count} are using a compliance scheme."); 
 
 Console.WriteLine($"Press any key to exit.");
 
@@ -25,6 +27,7 @@ Console.ReadKey();
 void InitConfiguration() 
 {
     Console.WriteLine("Loading ...");
+
     var builder = new ConfigurationBuilder()
             .AddUserSecrets<Program>();
 
@@ -34,6 +37,7 @@ void InitConfiguration()
 void LoadCsvData()
 {
     Console.WriteLine("Retrieving CSV data ...");
+
     using (var reader = new StreamReader(csvPath))
     using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     
@@ -42,14 +46,15 @@ void LoadCsvData()
     Console.WriteLine($"{csvList.Count()} records found in csv.");
 }
 
-void CheckCompanies()
+async Task CheckCompanies()
 {
     Console.WriteLine("Checking companies against Companies House ...");
+
     var companiesHouseClient = new CompaniesHouseClient(configurationRoot);
 
-    foreach (var compNumber in csvList.Select(c => c.CompanyNumber))
+    foreach (var row in csvList)
     {
-        var company = companiesHouseClient.GetCompany(compNumber ?? string.Empty);
+        var company = await companiesHouseClient.GetCompanyAsync(row.CompanyNumber ?? string.Empty);
 
         if (company?.SicCodes != null)
         {
@@ -57,8 +62,20 @@ void CheckCompanies()
 
             if (hasMatch)
             {
-                matchingCompanies.Add(compNumber);
-                Console.WriteLine($"{company.Name} is a matching producer.");
+                matchingCompanies.Add(row.CompanyNumber);
+
+                var sanitisedString = row.Scheme.Replace("\r", string.Empty);
+
+                Console.WriteLine($"{company.Name} is a matching producer using the scheme {sanitisedString}.");
+
+                if (!sanitisedString.Contains("DirectRegistrant"))
+                {
+                    companiesUsingScheme.Add(row.CompanyNumber);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"{company.Name} is NOT a matching producer.");
             }
         }
 
